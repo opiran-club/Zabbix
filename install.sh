@@ -1,18 +1,4 @@
-git clone --depth 1 https://github.com/opiran-club/zabbix.git
-cd /zabbix/install
-./server.sh
 
-# Navigate to http://hostname/zabbix
-
-# Get DB password from script and finalize front end 
-configuration
-
-# Login using Admin/zabbix
-
-# To stop and start Zabbix server
-
-# sudo service zabbix-server stop
-# sudo service zabbix-server start
 
 # Install database
 cd /zabbix/install
