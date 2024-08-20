@@ -14,6 +14,8 @@ http(S)://IP-ADDRESS/zabbix
 ```
 #### Login using Admin/zabbix and password which you pick during setup
 
+-----------------------------------------------------------------------------------------
+
 #### To stop and start Zabbix server
 
 ```
