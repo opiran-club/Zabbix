@@ -323,7 +323,7 @@ while true; do
     echo ""
     echo -e "\e[93m+-----------------------------------------------+\e[0m" 
     echo ""
-    printf "${GREEN} 1) ${NC} Zabbix server${NC}\n"
+    printf "${GREEN} 1) ${NC} Zabbix (server+agent+Database) ${NC}\n"
     printf "${GREEN} 2) ${NC} Zabbix agent${NC}\n"
     echo ""
     printf "${GREEN} 3) ${NC} Move database${NC}\n"
