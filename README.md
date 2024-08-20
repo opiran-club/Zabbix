@@ -1,5 +1,9 @@
 ## Zabbix Server / Agent
 
+###  ‼️ INSTRUCTION ‼️
+
+#### 👉 With root user
+
 ```
 bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/server.sh --ipv4)
 ```
@@ -34,15 +38,16 @@ service zabbix-agent stop / service zabbix-agent start
 
 #### On menu pick zabbix agent
 
-```
-bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/server.sh --ipv4)
-```
 
 -----------------------------------------------------------------------------------------
 ### To change your database location
 
 #### On menu pick Database Migeration
 
-```
-bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/server.sh --ipv4)
-```
+---------------------------------------------------------------------------------------------------------------------------------------
+
+### Credits
+ - credited by [OPIran](https://github.com/opiran-club)
+
+### Contacts
+ - Visit Me at [OPIran-Gap](https://t.me/opiran_official)
