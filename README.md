@@ -39,9 +39,9 @@ bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install
 ```
 
 -----------------------------------------------------------------------------------------
-### Rolling back your database from backup in /var/lib
+### To change your database location
 
-#### On menu pick Rolling back database
+#### On menu pick Database Migeration
 
 ```
 bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/server.sh --ipv4)
