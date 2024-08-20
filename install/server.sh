@@ -139,14 +139,20 @@ log() {
     echo "$timestamp $message" >> "$logfile" 2>&1
 }
 
+log_colored(){
+    local color="$1"
+    local msg="$2"
+    log "${color}${msg}${NC}"
+}
+
 install_mysql() {
     clear
     echo ""
-    log "Installing MySQL..."
+    log_colored "Installing MySQL..."
     echo ""
     apt-get -y update >> "$logfile" 2>&1
     apt-get -y install mysql-server mysql-client >> "$logfile" 2>&1
-    log "Configuring MySQL..."
+    log_colored "Configuring MySQL..."
 mysql --user=root <<-EOF
 SET GLOBAL log_bin_trust_function_creators = 1;
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${dbroot}';
@@ -164,7 +170,7 @@ EOF
 }
 
 install_java() {
-    log "Installing Zulu Java JDK..."
+    log_colored "Installing Zulu Java JDK..."
     if ! command -v wget &> /dev/null; then
         apt-get install -y wget
     fi
@@ -182,13 +188,13 @@ install_java() {
 }
 
 install_zabbix() {
-    log "Downloading and installing Zabbix..."
+    log_colored "Downloading and installing Zabbix..."
     wget -q --directory-prefix="$tmpdir" "$zabbixurl" >> "$logfile" 2>&1
     tar -xf "$tmpdir/$zabbixarchive" -C "$tmpdir" >> "$logfile" 2>&1
      mv "$tmpdir/$filename" "$srcdir" >> "$logfile" 2>&1
 
     if [ ! -f /etc/systemd/system/zabbix-server.service ]; then
-    log "Importing Zabbix database schema..."
+    log_colored "Importing Zabbix database schema..."
     cd "$srcdir/$filename/database/mysql" >> "$logfile" 2>&1
     mysql -u zabbix -p"$dbzabbix" zabbix < schema.sql >> "$logfile" 2>&1
     mysql -u zabbix -p"$dbzabbix" zabbix < images.sql >> "$logfile" 2>&1
@@ -205,7 +211,7 @@ EOF
 }
 
 install_php() {
-    log "Installing Apache and PHP..."
+    log_colored "Installing Apache and PHP..."
     apt-get -y install fping apache2 php libapache2-mod-php php-cli php-mysql php-mbstring php-gd php-xml php-bcmath php-ldap mlocate >> "$logfile" 2>&1
     updatedb >> "$logfile" 2>&1
     phpini=$(locate php.ini | head -n 1)
@@ -218,7 +224,7 @@ install_php() {
 }
 
 build_zabbix() {
-    log "Building Zabbix..."
+    log_colored "Building Zabbix..."
      add-apt-repository ppa:longsleep/golang-backports -y >> "$logfile" 2>&1
      apt-get update >> "$logfile" 2>&1
 
@@ -228,7 +234,7 @@ build_zabbix() {
 
     cd "$srcdir/$filename" >> "$logfile" 2>&1
 
-    log "Applying patches..."
+    log_colored "Applying patches..."
     sed -i 's/strconv.Atoi(strings.TrimSpace(line\[:len(line)-2\]))/strconv.ParseInt(strings.TrimSpace(line[:len(line)-2]),10,64)/' src/go/plugins/proc/procfs_linux.go >> $logfile 2>&1
     sed -i '/MYSQL_OPT_RECONNECT/d' src/libs/zbxdb/db.c >> $logfile 2>&1
     sed -i '/Cannot set MySQL reconnect option/d' src/libs/zbxdb/db.c >> $logfile 2>&1
@@ -245,7 +251,7 @@ build_zabbix() {
 }
 
 install_zabbix_services() {
-    log "Installing Zabbix Server Service..."
+    log_colored "Installing Zabbix Server Service..."
      tee /etc/systemd/system/zabbix-server.service > /dev/null <<EOT
 [Unit]
 Description=Zabbix Server
@@ -265,7 +271,7 @@ EOT
 
     systemctl enable zabbix-server >> $logfile 2>&1
 
-    log "Installing Zabbix Agent Service..."
+    log_colored "Installing Zabbix Agent Service..."
      tee /etc/systemd/system/zabbix-agent.service > /dev/null <<EOT
 [Unit]
 Description=Zabbix Agent
@@ -287,7 +293,7 @@ EOT
 }
 
 finalize_installation() {
-    log "Installation completed. System needs to be restarted."
+    log_colored "Installation completed. System needs to be restarted."
 }
 
 server() {
@@ -309,8 +315,8 @@ server() {
 }
 
 uninstall() {
-    log "Starting uninstallation process..."
-    log "Removing Zabbix..."
+    log_colored "Starting uninstallation process..."
+    log_colored "Removing Zabbix..."
     systemctl stop zabbix-server >> "$logfile" 2>&1
     systemctl stop zabbix-agent >> "$logfile" 2>&1
     systemctl disable zabbix-server >> "$logfile" 2>&1
@@ -322,7 +328,7 @@ uninstall() {
     rm -rf /usr/local/etc/zabbix_server.conf >> "$logfile" 2>&1
     rm -rf /usr/local/src/zabbix* >> "$logfile" 2>&1
     rm -rf /usr/local/bin/zabbix* >> "$logfile" 2>&1
-    log "Removing MySQL..."
+    log_colored "Removing MySQL..."
     systemctl stop mysql >> "$logfile" 2>&1
     systemctl disable mysql >> "$logfile" 2>&1
     apt-get remove --purge -y mysql-server mysql-client mysql-common >> "$logfile" 2>&1
@@ -333,13 +339,13 @@ uninstall() {
     rm -rf /var/log/mysql >> "$logfile" 2>&1
     rm -rf /var/log/mysql* >> "$logfile" 2>&1
     rm -rf /var/lib/mysql* >> "$logfile" 2>&1
-    log "Removing Java..."
+    log_colored "Removing Java..."
     update-alternatives --remove java /usr/lib/jvm/zulu*/bin/java >> "$logfile" 2>&1
     update-alternatives --remove javac /usr/lib/jvm/zulu*/bin/javac >> "$logfile" 2>&1
     rm -rf /usr/lib/jvm/zulu* >> "$logfile" 2>&1
-    log "Cleaning up temporary files..."
+    log_colored "Cleaning up temporary files..."
     rm -rf /tmp/zabbix-*
-    log "Uninstallation completed."
+    log_colored "Uninstallation completed."
 }
 
 while true; do
@@ -349,7 +355,7 @@ while true; do
     clear
     logo
     echo -e "\e[93m╔═══════════════════════════════════════════════╗\e[0m"  
-    echo -e "\e[93m║            \e[94mZabbix                      \e[93m║\e[0m"   
+    echo -e "\e[93m║         \e[94mZABBIX INSTALLATION                      \e[93m║\e[0m"   
     echo -e "\e[93m╠═══════════════════════════════════════════════╣\e[0m"
     echo ""
     echo -e "${BLUE}   ${tg_title}   ${NC}"
