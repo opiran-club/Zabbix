@@ -1,3 +1,13 @@
+#!/bin/bash
+# 
+# Zabbix installer Bash Script
+# Author: github.com/opiran-club
+#
+# For more information and updates, visit github.com/opiran-club and @opiran_official on telegram.
+#
+# Disclaimer:
+# This script comes with no warranties or guarantees. Use it at your own risk.
+
 CYAN="\e[96m"
 GREEN="\e[92m"
 YELLOW="\e[93m"
@@ -136,7 +146,6 @@ install_mysql() {
     echo ""
     apt-get -y update >> "$logfile" 2>&1
     apt-get -y install mysql-server mysql-client >> "$logfile" 2>&1
-
     log "Configuring MySQL..."
 mysql --user=root <<-EOF
 SET GLOBAL log_bin_trust_function_creators = 1;
@@ -154,7 +163,6 @@ FLUSH PRIVILEGES;
 EOF
 }
 
-# Function to install Java
 install_java() {
     log "Installing Zulu Java JDK..."
     if ! command -v wget &> /dev/null; then
@@ -173,7 +181,6 @@ install_java() {
     update-alternatives --install "/usr/bin/javac" "javac" "$javahome/bin/javac" 1 >> "$logfile" 2>&1
 }
 
-# Function to install Zabbix
 install_zabbix() {
     log "Downloading and installing Zabbix..."
     wget -q --directory-prefix="$tmpdir" "$zabbixurl" >> "$logfile" 2>&1
@@ -197,12 +204,10 @@ EOF
     fi
 }
 
-# Function to install PHP and Apache
 install_php() {
     log "Installing Apache and PHP..."
     apt-get -y install fping apache2 php libapache2-mod-php php-cli php-mysql php-mbstring php-gd php-xml php-bcmath php-ldap mlocate >> "$logfile" 2>&1
     updatedb >> "$logfile" 2>&1
-
     phpini=$(locate php.ini | head -n 1)
     sed -i "s/max_execution_time = 30/max_execution_time = 300/g" "$phpini"
     sed -i "s/memory_limit = 128M/memory_limit = 256M/g" "$phpini"
@@ -212,7 +217,6 @@ install_php() {
     systemctl restart apache2 >> "$logfile" 2>&1
 }
 
-# Function to build Zabbix
 build_zabbix() {
     log "Building Zabbix..."
      add-apt-repository ppa:longsleep/golang-backports -y >> "$logfile" 2>&1
@@ -240,7 +244,6 @@ build_zabbix() {
      sed -i "s/# StartPingers=1/StartPingers=10/g" "$zabbixconf" >> $logfile 2>&1
 }
 
-# Function to install Zabbix services
 install_zabbix_services() {
     log "Installing Zabbix Server Service..."
      tee /etc/systemd/system/zabbix-server.service > /dev/null <<EOT
@@ -283,14 +286,12 @@ EOT
     systemctl enable zabbix-agent >> $logfile 2>&1
 }
 
-# Function to finalize the installation
 finalize_installation() {
     log "Installation completed. System needs to be restarted."
 }
 
 server() {
     ask_user_input
-
     logfile=/tmp/install_zabbix.log
     tmpdir=$(mktemp -d -t zabbix-XXXXXXXXXX)
     jdkurl="https://cdn.azul.com/zulu/bin/zulu19.32.13-ca-jdk19.0.4-linux_x64.tar.gz"
@@ -300,12 +301,45 @@ server() {
     zabbixarchive=$(basename "$zabbixurl")
     srcdir="/usr/local/src"
     zabbixconf="/usr/local/etc/zabbix_server.conf"
-
     install_mysql
     install_java
     install_zabbix
     finalize_installation
     ask_reboot
+}
+
+uninstall() {
+    log "Starting uninstallation process..."
+    log "Removing Zabbix..."
+    systemctl stop zabbix-server >> "$logfile" 2>&1
+    systemctl stop zabbix-agent >> "$logfile" 2>&1
+    systemctl disable zabbix-server >> "$logfile" 2>&1
+    systemctl disable zabbix-agent >> "$logfile" 2>&1
+    rm -f /etc/systemd/system/zabbix-server.service >> "$logfile" 2>&1
+    rm -f /etc/systemd/system/zabbix-agent.service >> "$logfile" 2>&1
+    rm -rf /usr/local/sbin/zabbix_server >> "$logfile" 2>&1
+    rm -rf /usr/local/sbin/zabbix_agent >> "$logfile" 2>&1
+    rm -rf /usr/local/etc/zabbix_server.conf >> "$logfile" 2>&1
+    rm -rf /usr/local/src/zabbix* >> "$logfile" 2>&1
+    rm -rf /usr/local/bin/zabbix* >> "$logfile" 2>&1
+    log "Removing MySQL..."
+    systemctl stop mysql >> "$logfile" 2>&1
+    systemctl disable mysql >> "$logfile" 2>&1
+    apt-get remove --purge -y mysql-server mysql-client mysql-common >> "$logfile" 2>&1
+    apt-get autoremove -y >> "$logfile" 2>&1
+    apt-get autoclean >> "$logfile" 2>&1
+    rm -rf /etc/mysql >> "$logfile" 2>&1
+    rm -rf /var/lib/mysql >> "$logfile" 2>&1
+    rm -rf /var/log/mysql >> "$logfile" 2>&1
+    rm -rf /var/log/mysql* >> "$logfile" 2>&1
+    rm -rf /var/lib/mysql* >> "$logfile" 2>&1
+    log "Removing Java..."
+    update-alternatives --remove java /usr/lib/jvm/zulu*/bin/java >> "$logfile" 2>&1
+    update-alternatives --remove javac /usr/lib/jvm/zulu*/bin/javac >> "$logfile" 2>&1
+    rm -rf /usr/lib/jvm/zulu* >> "$logfile" 2>&1
+    log "Cleaning up temporary files..."
+    rm -rf /tmp/zabbix-*
+    log "Uninstallation completed."
 }
 
 while true; do
