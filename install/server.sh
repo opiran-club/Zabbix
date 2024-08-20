@@ -132,11 +132,12 @@ ask_user_input() {
 }
 
 
-log() {
-    local message="$1"
-    local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-    echo "${YELLOW}$timestamp${GREEN} $message${NC}"
-    echo "$timestamp $message" >> "$logfile" 2>&1
+log(){
+    local msg="$1"
+    local timestamp
+    timestamp=$(date +"%m-%d-%Y %k:%M:%S")
+    echo -e "${timestamp} $msg"
+    echo -e "${timestamp} $msg" >> "$logfile" 2>&1
 }
 
 log_colored(){
