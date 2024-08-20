@@ -297,6 +297,23 @@ finalize_installation() {
     log_colored YELLOW "Installation completed. System needs to be restarted."
 }
 
+final() {
+clear
+public_ip=$(echo "$location_info" | jq -r .ip)
+logo
+echo ""
+echo -e "    ${MAGENTA} Your ZABBIX server setup successfully${NC}"
+printf "\e[93m+-------------------------------------+\e[0m\n" 
+echo ""
+echo ""
+echo ""
+echo -e "${MAGENTA}Please visit zabbix at: ${GREEN}http://$public_ip/zabbix ${NC}"
+echo ""
+printf "\e[93m+-------------------------------------+\e[0m\n" 
+echo ""
+ask_reboot
+}
+
 server() {
     ask_user_input
     logfile=/tmp/install_zabbix.log
@@ -312,7 +329,7 @@ server() {
     install_java
     install_zabbix
     finalize_installation
-    ask_reboot
+    final
 }
 
 uninstall() {
