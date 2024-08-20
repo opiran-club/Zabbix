@@ -360,7 +360,7 @@ while true; do
     printf "${GREEN} 1) ${NC} Zabbix (server+agent+Database) ${NC}\n"
     printf "${GREEN} 2) ${NC} Zabbix agent installer${NC}\n"
     echo ""
-    printf "${GREEN} 3) ${NC} Rolling-back database from backup${NC}\n"
+    printf "${GREEN} 3) ${NC} Database migeration${NC}\n"
     printf "${GREEN} 4) ${NC} Uninstall ${NC}\n"
     echo ""
     echo -e "\e[93m+-----------------------------------------------+\e[0m" 
