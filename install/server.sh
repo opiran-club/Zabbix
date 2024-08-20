@@ -358,10 +358,10 @@ while true; do
     echo -e "\e[93m+-----------------------------------------------+\e[0m" 
     echo ""
     printf "${GREEN} 1) ${NC} Zabbix (server+agent+Database) ${NC}\n"
-    printf "${GREEN} 2) ${NC} Zabbix agent${NC}\n"
+    printf "${GREEN} 2) ${NC} Zabbix agent installer${NC}\n"
     echo ""
-    printf "${GREEN} 3) ${NC} Move database${NC}\n"
-    printf "${GREEN} 4) ${NC} Uninstall Menu${NC}\n"
+    printf "${GREEN} 3) ${NC} Rolling-back database from backup${NC}\n"
+    printf "${GREEN} 4) ${NC} Uninstall ${NC}\n"
     echo ""
     echo -e "\e[93m+-----------------------------------------------+\e[0m" 
     echo ""
@@ -377,11 +377,11 @@ while true; do
             ;;
         2)
 	    clear
-     	    agent
+     	    bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/agent.sh --ipv4)
             ;;
         3)
             clear
-	    mysql_move
+	    bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/data_rollback.sh --ipv4)
             ;;
         4)
             clear
