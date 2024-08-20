@@ -381,7 +381,7 @@ while true; do
             ;;
         3)
             clear
-	    bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/data_rollback.sh --ipv4)
+	    bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/data_rsync.sh --ipv4)
             ;;
         4)
             clear
