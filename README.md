@@ -34,13 +34,13 @@ service zabbix-agent stop / service zabbix-agent start
 
 -----------------------------------------------------------------------------------------
 
-### Install Agent on client
+### 👉 Install Agent on another server to connect to zabbix server
 
 #### On menu pick zabbix agent
 
 
 -----------------------------------------------------------------------------------------
-### To change your database location
+### 👉 To change current database location (var/lib/zabbix)
 
 #### On menu pick Database Migeration
 
