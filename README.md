@@ -1,81 +1,188 @@
-## [Zabbix Server / Agent](https://opiran-club.github.io/Zabbix/)
- 
-###  ‼️ INSTRUCTION ‼️
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zabbix Server / Agent Installation Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
 
-#### 👉 With root user
+        header, footer {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
 
-```
-bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/server.sh --ipv4)
-```
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-[Zabbic official documents manual](https://www.zabbix.com/documentation/current/en/manual)
-#
-#
-#### After finnish up installer Navigate to 
-```
-http(S)://IP-ADDRESS/zabbix
-```
-#
-#
-#
+        h1, h2, h3 {
+            color: #333;
+        }
 
-### 1) click Next
-![image](https://github.com/user-attachments/assets/ea3a0fda-a1f0-4314-bfe6-cc09262563ef)
-#
-### 2) click Next
-![image](https://github.com/user-attachments/assets/6bd28102-237a-4be1-bc59-155d794baa1f)
-#
-### 3) type your password that you entered during setup
-![image](https://github.com/user-attachments/assets/0135feae-9c36-4424-9b7d-c9efd555d70f)
-#
-### 4) type your desire name and select your timezone
-![image](https://github.com/user-attachments/assets/51de5184-7063-4530-84ec-593ce53ad563)
-#
-### 5) click next
-![image](https://github.com/user-attachments/assets/81c5869b-316c-4569-9899-ce56969ab405)
-#
-### 6) finnish
-![image](https://github.com/user-attachments/assets/b8860cb0-e5e0-430f-a48d-1dff37b44da5)
-#
+        pre {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
 
-## after finnishing setup , login the dashboard using 
-#### 👉 username is:
-```
-Admin
-```
-#### 👉 password is:
-```
-zabbix
-```
-### go to users tab and change default password
-### for reference document 👉 https://www.zabbix.com/documentation/current/en/manual/quickstart/login
-#
------------------------------------------------------------------------------------------
-#
-#
-#
-#### To stop and start Zabbix server
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #eee;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
 
-```
-service zabbix-server stop / service zabbix-server start
-```
+        .instruction {
+            background-color: #ffeb3b;
+            padding: 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
 
-#### To stop and start MySQL server
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
 
-```
-service mysql stop / service mysql start
-```
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
 
-#### To stop and start agent service
+        a:hover {
+            text-decoration: underline;
+        }
 
-```
-service zabbix-agent stop / service zabbix-agent start
-```
+        .section-divider {
+            margin: 2rem 0;
+            border-top: 1px solid #ddd;
+        }
 
----------------------------------------------------------------------------------------------------------------------------------------
+        .credits, .contacts {
+            text-align: center;
+        }
 
-### Credits
- - credited by [OPIran](https://github.com/opiran-club)
+        .credits a, .contacts a {
+            color: #fff;
+            text-decoration: underline;
+        }
 
-### Contacts
- - Visit Me at [OPIran-Gap](https://t.me/opiran_official)
+        .credits a:hover, .contacts a:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Zabbix Server / Agent Installation Guide</h1>
+    </header>
+    <main>
+        <section class="instruction">
+            <h2>‼️ INSTRUCTION ‼️</h2>
+            <h3>👉 With root user</h3>
+            <pre><code>bash &lt;(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/server.sh --ipv4)</code></pre>
+            <p><a href="https://www.zabbix.com/documentation/current/en/manual" target="_blank">Zabbic official documents manual</a></p>
+        </section>
+
+        <section>
+            <h3>After finishing the installer, navigate to</h3>
+            <pre><code>http(S)://IP-ADDRESS/zabbix</code></pre>
+        </section>
+
+        <section>
+            <h3>1) Click Next</h3>
+            <img src="https://github.com/user-attachments/assets/ea3a0fda-a1f0-4314-bfe6-cc09262563ef" alt="Step 1">
+        </section>
+
+        <section>
+            <h3>2) Click Next</h3>
+            <img src="https://github.com/user-attachments/assets/6bd28102-237a-4be1-bc59-155d794baa1f" alt="Step 2">
+        </section>
+
+        <section>
+            <h3>3) Type your password that you entered during setup</h3>
+            <img src="https://github.com/user-attachments/assets/0135feae-9c36-4424-9b7d-c9efd555d70f" alt="Step 3">
+        </section>
+
+        <section>
+            <h3>4) Type your desired name and select your timezone</h3>
+            <img src="https://github.com/user-attachments/assets/51de5184-7063-4530-84ec-593ce53ad563" alt="Step 4">
+        </section>
+
+        <section>
+            <h3>5) Click Next</h3>
+            <img src="https://github.com/user-attachments/assets/81c5869b-316c-4569-9899-ce56969ab405" alt="Step 5">
+        </section>
+
+        <section>
+            <h3>6) Finish</h3>
+            <img src="https://github.com/user-attachments/assets/b8860cb0-e5e0-430f-a48d-1dff37b44da5" alt="Step 6">
+        </section>
+
+        <section class="section-divider"></section>
+
+        <section>
+            <h2>After finishing the setup, log in to the dashboard using</h2>
+            <h3>👉 Username is:</h3>
+            <pre><code>Admin</code></pre>
+            <h3>👉 Password is:</h3>
+            <pre><code>zabbix</code></pre>
+            <p>Go to the users tab and change the default password.</p>
+            <p>For reference, check the document 👉 <a href="https://www.zabbix.com/documentation/current/en/manual/quickstart/login" target="_blank">Zabbix Quickstart Guide</a></p>
+        </section>
+
+        <section class="section-divider"></section>
+
+        <section>
+            <h2>To stop and start Zabbix server</h2>
+            <pre><code>service zabbix-server stop / service zabbix-server start</code></pre>
+        </section>
+
+        <section>
+            <h2>To stop and start MySQL server</h2>
+            <pre><code>service mysql stop / service mysql start</code></pre>
+        </section>
+
+        <section>
+            <h2>To stop and start agent service</h2>
+            <pre><code>service zabbix-agent stop / service zabbix-agent start</code></pre>
+        </section>
+
+        <section class="section-divider"></section>
+
+        <section class="credits">
+            <h3>Credits</h3>
+            <p>Credited by <a href="https://github.com/opiran-club" target="_blank">OPIran</a></p>
+        </section>
+
+        <section class="contacts">
+            <h3>Contacts</h3>
+            <p>Visit me at <a href="https://t.me/opiran_official" target="_blank">OPIran-Gap</a></p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Zabbix Installation Guide</p>
+    </footer>
+</body>
+</html>
