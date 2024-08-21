@@ -12,6 +12,9 @@ bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install
 ```
 http(S)://IP-ADDRESS/zabbix
 ```
+#
+#
+#
 
 ### 1) click Next
 ![image](https://github.com/user-attachments/assets/ea3a0fda-a1f0-4314-bfe6-cc09262563ef)
