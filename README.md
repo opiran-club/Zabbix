@@ -8,6 +8,9 @@
 bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/server.sh --ipv4)
 ```
 
+[Zabbic official documents manual](https://www.zabbix.com/documentation/current/en/manual)
+#
+#
 #### After finnish up installer Navigate to 
 ```
 http(S)://IP-ADDRESS/zabbix
