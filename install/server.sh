@@ -1,12 +1,4 @@
 #!/bin/bash
-# 
-# Zabbix installer Bash Script
-# Author: github.com/opiran-club
-#
-# For more information and updates, visit github.com/opiran-club and @opiran_official on telegram.
-#
-# Disclaimer:
-# This script comes with no warranties or guarantees. Use it at your own risk.
 
 CYAN="\e[96m"
 GREEN="\e[92m"
@@ -17,6 +9,24 @@ MAGENTA="\e[95m"
 WHITE="\e[97m"
 NC="\e[0m"
 BOLD=$(tput bold)
+
+logo1="     ______    _______    __      _______        __      _____  ___   "
+logo2="    /      \  |   __  \  |  \    /       \      /  \     \    \|   \  "
+logo3="   /  ____  \ (  |__)  ) |   |  |         |    /    \    |.\   \    | "
+logo4="  /  /    )  )|   ____/  |   |  |_____/   )   /' /\  \   |: \   \   | "
+logo5=" (  (____/  / (   /      |.  |   //      /   //  __'  \  |.  \    \.| "
+logo6="  \        / /    \      /\  |\ |:  __   \  /   /  \\   \ |    \    \| "
+logo7="   \_____/ (_______)    (__\_|_)|__|  \___)(___/    \___)\___|\____\) "
+
+logo() {
+echo -e "${BLUE}${logo1:0:24}${RED}${logo1:24:19}${WHITE}${logo1:43:14}${GREEN}${logo1:57}${NC}"
+echo -e "${BLUE}${logo2:0:24}${RED}${logo2:24:19}${WHITE}${logo2:43:14}${GREEN}${logo2:57}${NC}"
+echo -e "${BLUE}${logo3:0:24}${RED}${logo3:24:19}${WHITE}${logo3:43:14}${GREEN}${logo3:57}${NC}"
+echo -e "${BLUE}${logo4:0:24}${RED}${logo4:24:19}${WHITE}${logo4:43:14}${GREEN}${logo4:57}${NC}"
+echo -e "${BLUE}${logo5:0:24}${RED}${logo5:24:19}${WHITE}${logo5:43:14}${GREEN}${logo5:57}${NC}"
+echo -e "${BLUE}${logo6:0:24}${RED}${logo6:24:19}${WHITE}${logo6:43:14}${GREEN}${logo6:57}${NC}"
+echo -e "${BLUE}${logo7:0:24}${RED}${logo7:24:19}${WHITE}${logo7:43:14}${GREEN}${logo7:57}${NC}"
+}
 
 
 if [ "$EUID" -ne 0 ]; then
@@ -45,93 +55,6 @@ case "$reboot" in
 exit
 }
 
-logo1="     ______    _______    __      _______        __      _____  ___   "
-logo2="    /      \  |   __  \  |  \    /       \      /  \     \    \|   \  "
-logo3="   /  ____  \ (  |__)  ) |   |  |         |    /    \    |.\   \    | "
-logo4="  /  /    )  )|   ____/  |   |  |_____/   )   /' /\  \   |: \   \   | "
-logo5=" (  (____/  / (   /      |.  |   //      /   //  __'  \  |.  \    \.| "
-logo6="  \        / /    \      /\  |\ |:  __   \  /   /  \\   \ |    \    \| "
-logo7="   \_____/ (_______)    (__\_|_)|__|  \___)(___/    \___)\___|\____\) "
-
-logo() {
-echo -e "${BLUE}${logo1:0:24}${RED}${logo1:24:19}${WHITE}${logo1:43:14}${GREEN}${logo1:57}${NC}"
-echo -e "${BLUE}${logo2:0:24}${RED}${logo2:24:19}${WHITE}${logo2:43:14}${GREEN}${logo2:57}${NC}"
-echo -e "${BLUE}${logo3:0:24}${RED}${logo3:24:19}${WHITE}${logo3:43:14}${GREEN}${logo3:57}${NC}"
-echo -e "${BLUE}${logo4:0:24}${RED}${logo4:24:19}${WHITE}${logo4:43:14}${GREEN}${logo4:57}${NC}"
-echo -e "${BLUE}${logo5:0:24}${RED}${logo5:24:19}${WHITE}${logo5:43:14}${GREEN}${logo5:57}${NC}"
-echo -e "${BLUE}${logo6:0:24}${RED}${logo6:24:19}${WHITE}${logo6:43:14}${GREEN}${logo6:57}${NC}"
-echo -e "${BLUE}${logo7:0:24}${RED}${logo7:24:19}${WHITE}${logo7:43:14}${GREEN}${logo7:57}${NC}"
-}
-
-ask_user_input() {
-    echo -e "\n${RED} TIP !!${NC}"
-    echo -e "${GREEN} You can use the same password for all the fields below.${NC}"
-    echo && echo
-
-    while true; do
-        echo -ne "${YELLOW}Enter MySQL root password: ${NC}" 
-        read -r dbroot
-        if [[ -z "$dbroot" ]]; then
-            echo -e "${RED}MySQL root password cannot be empty. Please try again.${NC}"
-        else
-            break
-        fi
-    done
-    echo && echo
-
-    while true; do
-        echo -ne "${YELLOW}Enter Zabbix MySQL user password: ${NC}" 
-        read -r dbzabbix
-        if [[ -z "$dbzabbix" ]]; then
-            echo -e "${RED}Zabbix MySQL user password cannot be empty. Please try again.${NC}"
-        else
-            break
-        fi
-    done
-    echo && echo
-
-    while true; do
-        echo -ne "${YELLOW}Enter MySQL monitoring user password: ${NC}" 
-        read -r monzabbix
-        if [[ -z "$monzabbix" ]]; then
-            echo -e "${RED}MySQL monitoring user password cannot be empty. Please try again.${NC}"
-        else
-            break
-        fi
-    done
-    echo && echo
-
-    if ! command -v jq &> /dev/null; then
-        echo -e "${YELLOW}jq is not installed. Installing now...${NC}"
-        apt-get install -y jq
-    fi
-
-    location_info=$(curl -s "http://ipwho.is")
-    public_ip=$(echo "$location_info" | jq -r .ip)
-    location=$(echo "$location_info" | jq -r .country)
-
-    current_timezone=$(timedatectl | grep "Time zone" | awk '{print $3}')
-    printf "${YELLOW}Your current timezone is ${GREEN}%s${NC}\n" "$current_timezone"
-
-    while true; do
-        echo ""
-        echo -ne "${YELLOW}Your location is ${GREEN}$location${YELLOW}. Press Enter to use the current timezone or enter a different PHP timezone (e.g., America/New_York):${NC} " 
-        read -r phptz
-
-        if [[ -z "$phptz" ]]; then
-            phptz="$current_timezone"
-            echo -e "${GREEN}Using the current timezone: ${NC}$phptz"
-            break
-        elif [[ "$phptz" =~ ^[A-Za-z]+/[A-Za-z_]+$ ]]; then
-            echo -e "${GREEN}Using the specified timezone: ${NC}$phptz"
-            break
-        else
-            echo -e "${RED}Invalid timezone format. Please try again.${NC}"
-        fi
-    done
-}
-
-
 log(){
     local msg="$1"
     local timestamp
@@ -146,191 +69,132 @@ log_colored (){
     log "${color}${msg}${NC}"
 }
 
+preparation() {
 
-install_mysql() {
+. /etc/os-release
+ARCH=$(dpkg --print-architecture)
+OS="${ID}${VERSION_ID}"
+if [ "$ARCH" == "arm64" ]; then
+  ARCH_SUFFIX="-arm64"
+else
+  ARCH_SUFFIX=""
+fi
+
+ZABBIX_VERSION="7.0"
+logfile="zabbix_installer.log"
+    for pkg in jq nginx apache2 certbot; do
+        if ! command -v $pkg &> /dev/null; then
+            echo -e "${YELLOW}$pkg is not installed. Installing now...${NC}"
+            apt-get install -y $pkg
+        fi
+    done
+
+    if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
+        wget -N "https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/${ID}${ARCH_SUFFIX}/pool/main/z/zabbix-release/zabbix-release_${ZABBIX_VERSION}-2+${ID}${VERSION_ID}_all.deb"
+        dpkg -i "zabbix-release_${ZABBIX_VERSION}-2+${ID}${VERSION_ID}_all.deb"
+    else
+        echo -e "${RED}Unsupported OS version.${NC}"
+        exit 1
+    fi
+
+    apt-get update
+    apt-get install -y apt-get install mysql-server zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+}
+
+zabbix_server() {
+    preparation
     clear
-    echo ""
+    echo && echo
+    location_info=$(curl -s "http://ipwho.is")
+    public_ip=$(echo "$location_info" | jq -r .ip)
+    location=$(echo "$location_info" | jq -r .country)
+
+    current_timezone=$(timedatectl | grep "Time zone" | awk '{print $3}')
+
+    while true; do
+        echo -ne "${YELLOW}Enter your desired Database password: ${NC}" 
+        read -r dbroot
+        if [[ -z "$dbroot" ]]; then
+            echo -e "${RED}Database password cannot be empty. Please try again.${NC}"
+        else
+            break
+        fi
+    done
+
+    echo && echo
+    echo -ne "${YELLOW}Do you have a subdomain/domain pointing to ${GREEN}$public_ip [choose Y] or continue with ${GREEN}$public_ip [choose N]? (y/n): ${NC}" 
+    read -r answer
+    if [ "$answer" == "Yy" ]; then
+        echo ""
+        echo -ne "${YELLOW}Please enter your Domain/subdomain (hostname): ${NC}" 
+        read -r hostname
+        echo && echo
+        echo -ne "${YELLOW}Do you want to install Zabbix with Nginx instead of Apache? (y/n): ${NC}" 
+        read -r USE_NGINX
+            if [ "$USE_NGINX" == "Yy" ]; then
+                apt purge apache2 -y
+                apt install -y python3-certbot-nginx
+                certbot --nginx -d $hostname
+                apt-get install -y zabbix-nginx-conf
+                apt remove -y zabbix-apache-conf
+                sed -i "s/#        server_name/server_name $hostname;/g" /etc/zabbix/nginx.conf
+                systemctl restart nginx php-fpm zabbix-server zabbix-agent
+                systemctl enable nginx php-fpm zabbix-server zabbix-agent
+            else
+                apt purge nginx -y
+                apt install -y python3-certbot-apache
+                certbot --apache -d $hostname
+                systemctl restart apache2 zabbix-server zabbix-agent
+                systemctl enable apache2 zabbix-server zabbix-agent
+            fi
+    else
+        apt purge nginx -y
+        systemctl enable apache2 zabbix-server zabbix-agent
+    fi
+clear
+echo && echo
+echo -e "${YELLOW} Your database password is: ${GREEN} $dbroot ${NC}"
+echo -e "${YELLOW} Your hostname : ${GREEN} $hostname ${NC}"
+echo -e "${YELLOW} Your IP : ${GREEN} $public_ip ${NC}"
+echo -e "${YELLOW} Your Location : ${GREEN} $location ${NC}"
+echo && echo
     log_colored $YELLOW "Installing MySQL..."
     echo ""
-    apt-get -y update >> "$logfile" 2>&1
-    apt-get -y install mysql-server mysql-client >> "$logfile" 2>&1
     log_colored $YELLOW "Configuring MySQL..."
-mysql --user=root <<-EOF
+    mysql -uroot -p << EOF
+CREATE DATABASE zabbix CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+CREATE USER 'zabbix'@'localhost' IDENTIFIED BY '$dbroot';
+GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';
 SET GLOBAL log_bin_trust_function_creators = 1;
-ALTER USER 'root'@'localhost' IDENTIFIED BY '${dbroot}';
-DELETE FROM mysql.user WHERE User='';
-DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-DROP DATABASE IF EXISTS test;
-DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
-CREATE DATABASE zabbix CHARACTER SET UTF8 COLLATE UTF8_BIN;
-CREATE USER 'zabbix'@'%' IDENTIFIED BY '${dbzabbix}';
-GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'%';
-CREATE USER 'zbx_monitor'@'%' IDENTIFIED BY '${monzabbix}';
-GRANT USAGE, REPLICATION CLIENT, PROCESS, SHOW DATABASES, SHOW VIEW ON *.* TO 'zbx_monitor'@'%';
-FLUSH PRIVILEGES;
+EXIT
 EOF
-}
 
-install_java() {
-    log_colored $YELLOW "Installing Zulu Java JDK..."
-    if ! command -v wget &> /dev/null; then
-        apt-get install -y wget
-    fi
-    if ! command -v tar &> /dev/null; then
-        apt-get install -y tar
-    fi
-    wget -q --directory-prefix="$tmpdir" "$jdkurl" >> "$logfile" 2>&1
-    tar -xf "$tmpdir/$jdkarchive" -C "$tmpdir" >> "$logfile" 2>&1
-    rm -rf "$javahome" >> "$logfile" 2>&1
-    mkdir -p /usr/lib/jvm >> "$logfile" 2>&1
-    mv "$tmpdir/$filename" "$javahome" >> "$logfile" 2>&1
+    log_colored $YELLOW "Importing initial schema and data..."
+    zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
 
-    update-alternatives --install "/usr/bin/java" "java" "$javahome/bin/java" 1 >> "$logfile" 2>&1
-    update-alternatives --install "/usr/bin/javac" "javac" "$javahome/bin/javac" 1 >> "$logfile" 2>&1
-}
-
-install_zabbix() {
-    log_colored $YELLOW "Downloading and installing Zabbix..."
-    wget -q --directory-prefix="$tmpdir" "$zabbixurl" >> "$logfile" 2>&1
-    tar -xf "$tmpdir/$zabbixarchive" -C "$tmpdir" >> "$logfile" 2>&1
-     mv "$tmpdir/$filename" "$srcdir" >> "$logfile" 2>&1
-
-    if [ ! -f /etc/systemd/system/zabbix-server.service ]; then
-    log_colored $YELLOW "Importing Zabbix database schema..."
-    cd "$srcdir/$filename/database/mysql" >> "$logfile" 2>&1
-    mysql -u zabbix -p"$dbzabbix" zabbix < schema.sql >> "$logfile" 2>&1
-    mysql -u zabbix -p"$dbzabbix" zabbix < images.sql >> "$logfile" 2>&1
-    mysql -u zabbix -p"$dbzabbix" zabbix < data.sql >> "$logfile" 2>&1
-
-mysql --user=root <<-EOF
+    mysql -uroot -p << EOF
 SET GLOBAL log_bin_trust_function_creators = 0;
+EXIT
 EOF
 
-    install_php
-    build_zabbix
-    install_zabbix_services
-    fi
-}
+    log_colored $YELLOW "Configuring Zabbix server"
+    sed -i "s/# DBPassword=/DBPassword=$dbroot/" /etc/zabbix/zabbix_server.conf
 
-install_php() {
-    log_colored $YELLOW "Installing Apache and PHP..."
-    apt-get -y install fping apache2 php libapache2-mod-php php-cli php-mysql php-mbstring php-gd php-xml php-bcmath php-ldap mlocate >> "$logfile" 2>&1
-    updatedb >> "$logfile" 2>&1
-    phpini=$(locate php.ini | head -n 1)
-    sed -i "s/max_execution_time = 30/max_execution_time = 300/g" "$phpini"
-    sed -i "s/memory_limit = 128M/memory_limit = 256M/g" "$phpini"
-    sed -i "s/post_max_size = 8M/post_max_size = 32M/g" "$phpini"
-    sed -i "s/max_input_time = 60/max_input_time = 300/g" "$phpini"
-    sed -i "s|;date.timezone =|date.timezone = $phptz|g" "$phpini"
-    systemctl restart apache2 >> "$logfile" 2>&1
-}
+    log_colored $YELLOW "Restarting Zabbix server and agent"
+    systemctl restart zabbix-server zabbix-agent
 
-build_zabbix() {
-    log_colored $YELLOW "Building Zabbix..."
-     add-apt-repository ppa:longsleep/golang-backports -y >> "$logfile" 2>&1
-     apt-get update >> "$logfile" 2>&1
-
-     apt-get -y install build-essential libmysqlclient-dev libssl-dev libsnmp-dev libevent-dev pkg-config golang-go >> "$logfile" 2>&1
-     apt-get -y install libopenipmi-dev libcurl4-openssl-dev libxml2-dev libssh2-1-dev libpcre3-dev >> "$logfile" 2>&1
-     apt-get -y install libldap2-dev libiksemel-dev libgnutls28-dev >> "$logfile" 2>&1
-
-    cd "$srcdir/$filename" >> "$logfile" 2>&1
-
-    log_colored $YELLOW "Applying patches..."
-    sed -i 's/strconv.Atoi(strings.TrimSpace(line\[:len(line)-2\]))/strconv.ParseInt(strings.TrimSpace(line[:len(line)-2]),10,64)/' src/go/plugins/proc/procfs_linux.go >> $logfile 2>&1
-    sed -i '/MYSQL_OPT_RECONNECT/d' src/libs/zbxdb/db.c >> $logfile 2>&1
-    sed -i '/Cannot set MySQL reconnect option/d' src/libs/zbxdb/db.c >> $logfile 2>&1
-    
-     ./configure --enable-server --enable-agent2 --enable-ipv6 --with-mysql --with-openssl --with-net-snmp --with-openipmi --with-libcurl --with-libxml2 --with-ssh2 --with-ldap --enable-java --prefix=/usr/local >> $logfile 2>&1
-     make install >> $logfile 2>&1
-
-     chmod ug+s /usr/bin/fping
-     chmod ug+s /usr/bin/fping6
-     sed -i "s/# DBPassword=/DBPassword=$dbzabbix/g" "$zabbixconf" >> $logfile 2>&1
-     sed -i "s|# FpingLocation=/usr/sbin/fping|FpingLocation=/usr/bin/fping|g" "$zabbixconf" >> $logfile 2>&1
-     sed -i "s|# Fping6Location=/usr/sbin/fping6|Fping6Location=/usr/bin/fping6|g" "$zabbixconf" >> $logfile 2>&1
-     sed -i "s/# StartPingers=1/StartPingers=10/g" "$zabbixconf" >> $logfile 2>&1
-}
-
-install_zabbix_services() {
-    log_colored $YELLOW "Installing Zabbix Server Service..."
-     tee /etc/systemd/system/zabbix-server.service > /dev/null <<EOT
-[Unit]
-Description=Zabbix Server
-After=syslog.target network.target mysql.service
-
-[Service]
-Type=simple
-User=zabbix
-ExecStart=/usr/local/sbin/zabbix_server
-ExecReload=/usr/local/sbin/zabbix_server -R config_cache_reload
-RemainAfterExit=yes
-PIDFile=/tmp/zabbix_server.pid
-
-[Install]
-WantedBy=multi-user.target
-EOT
-
-    systemctl enable zabbix-server >> $logfile 2>&1
-
-    log_colored $YELLOW "Installing Zabbix Agent Service..."
-     tee /etc/systemd/system/zabbix-agent.service > /dev/null <<EOT
-[Unit]
-Description=Zabbix Agent
-After=syslog.target network.target
-
-[Service]
-Type=simple
-User=zabbix
-ExecStart=/usr/local/sbin/zabbix_agent
-ExecReload=/usr/local/sbin/zabbix_agent -R config_cache_reload
-RemainAfterExit=yes
-PIDFile=/tmp/zabbix_agent.pid
-
-[Install]
-WantedBy=multi-user.target
-EOT
-
-    systemctl enable zabbix-agent >> $logfile 2>&1
-}
-
-finalize_installation() {
+    clear
+    echo ""
+    echo -e "    ${MAGENTA}Your ZABBIX server is set up successfully${NC}"
+    printf "\e[93m+-------------------------------------+\e[0m\n" 
+    echo ""
     log_colored $YELLOW "Installation completed. System needs to be restarted."
-}
-
-final() {
-clear
-public_ip=$(echo "$location_info" | jq -r .ip)
-logo
-echo ""
-echo -e "    ${MAGENTA} Your ZABBIX server setup successfully${NC}"
-printf "\e[93m+-------------------------------------+\e[0m\n" 
-echo ""
-echo ""
-echo ""
-echo -e "${MAGENTA}Please visit zabbix at: ${GREEN}http://$public_ip/zabbix ${NC}"
-echo ""
-printf "\e[93m+-------------------------------------+\e[0m\n" 
-echo ""
-ask_reboot
-}
-
-server() {
-    ask_user_input
-    logfile=/tmp/install_zabbix.log
-    tmpdir=$(mktemp -d -t zabbix-XXXXXXXXXX)
-    jdkurl="https://cdn.azul.com/zulu/bin/zulu19.32.13-ca-jdk19.0.4-linux_x64.tar.gz"
-    jdkarchive=$(basename "$jdkurl")
-    javahome="/usr/lib/jvm/zulu19.32.13-ca-jdk19.0.4-linux_x64"
-    zabbixurl="https://cdn.zabbix.com/zabbix/sources/stable/6.0/zabbix-6.0.20.tar.gz"
-    zabbixarchive=$(basename "$zabbixurl")
-    srcdir="/usr/local/src"
-    zabbixconf="/usr/local/etc/zabbix_server.conf"
-    install_mysql
-    install_java
-    install_zabbix
-    finalize_installation
-    final
+    echo ""
+    echo -e "${MAGENTA}Please visit Zabbix at: ${GREEN}http://$public_ip/zabbix ${NC}"
+    echo ""
+    printf "\e[93m+-------------------------------------+\e[0m\n" 
+    echo ""
+    ask_reboot
 }
 
 uninstall() {
@@ -382,11 +246,9 @@ while true; do
     echo ""
     echo -e "\e[93m+-----------------------------------------------+\e[0m" 
     echo ""
-    printf "${GREEN} 1) ${NC} Zabbix (server+agent+Database) ${NC}\n"
-    printf "${GREEN} 2) ${NC} Zabbix agent installer${NC}\n"
+    printf "${GREEN} 1) ${NC} Zabbix Dashboard ${NC}\n"
     echo ""
-    printf "${GREEN} 3) ${NC} Database migeration${NC}\n"
-    printf "${GREEN} 4) ${NC} Uninstall ${NC}\n"
+    printf "${GREEN} 2) ${NC} Uninstall Zabbix ${NC}\n"
     echo ""
     echo -e "\e[93m+-----------------------------------------------+\e[0m" 
     echo ""
@@ -398,17 +260,9 @@ while true; do
     case $choice in
         1)
             clear
-            server
+            zabbix_server
             ;;
         2)
-	    clear
-     	    bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/agent.sh --ipv4)
-            ;;
-        3)
-            clear
-	    bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/data_rsync.sh --ipv4)
-            ;;
-        4)
             clear
 	    uninstall
             ;;
