@@ -1,5 +1,5 @@
-## [Zabbix Server / Agent](https://opiran-club.github.io/Zabbix/index.html)
- 
+## [Zabbix Dashboard](https://opiran-club.github.io/Zabbix/index.html)
+
 ###  ‼️ INSTRUCTION ‼️
 
 #### 👉 With root user
@@ -9,6 +9,10 @@ bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install
 ```
 
 [Zabbic official documents manual](https://www.zabbix.com/documentation/current/en/manual)
+
+### Next update :
+ - Zabbix agent (to connect other vm to zabbix server)
+ - change database directory
 #
 #
 #### After finnish up installer Navigate to 
