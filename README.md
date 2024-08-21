@@ -12,7 +12,6 @@ bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install
 ```
 http(S)://IP-ADDRESS/zabbix
 ```
-#### Login using Admin/zabbix and password which you pick during setup
 
 ### 1) click Next
 ![image](https://github.com/user-attachments/assets/ea3a0fda-a1f0-4314-bfe6-cc09262563ef)
@@ -32,8 +31,23 @@ http(S)://IP-ADDRESS/zabbix
 ### 6) finnish
 ![image](https://github.com/user-attachments/assets/b8860cb0-e5e0-430f-a48d-1dff37b44da5)
 
------------------------------------------------------------------------------------------
 
+## after finnishing setup , login the dashboard using 
+#### 👉 username is:
+```
+Admin
+```
+#### 👉 password is:
+```
+zabbix
+```
+#
+#
+#
+-----------------------------------------------------------------------------------------
+#
+#
+#
 #### To stop and start Zabbix server
 
 ```
@@ -51,25 +65,6 @@ service mysql stop / service mysql start
 ```
 service zabbix-agent stop / service zabbix-agent start
 ```
-
------------------------------------------------------------------------------------------
-
-### 👉 Install Agent on another server to connect to zabbix server
-
-#### On menu pick zabbix agent
-
-
------------------------------------------------------------------------------------------
-### 👉 To change current database location (var/lib/zabbix)
-
-#### On menu pick Database Migeration
-
------------------------------------------------------------------------------------------
-### 👉 To uninstall all packages (mysql / zabbix service )
-
-#### On menu pick uninstall
-
----------------------------------------------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------------------------------------------------
 
