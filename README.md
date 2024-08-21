@@ -44,8 +44,8 @@ Admin
 ```
 zabbix
 ```
-#
-#
+### go to users tab and change default password
+### for reference document 👉 https://www.zabbix.com/documentation/current/en/manual/quickstart/login
 #
 -----------------------------------------------------------------------------------------
 #
