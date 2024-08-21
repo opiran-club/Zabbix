@@ -1,4 +1,4 @@
-## [Zabbix Server / Agent](https://opiran-club.github.io/Zabbix/)
+## [Zabbix Server / Agent](https://opiran-club.github.io/Zabbix/index.html)
  
 ###  ‼️ INSTRUCTION ‼️
 
