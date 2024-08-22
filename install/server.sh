@@ -244,11 +244,14 @@ while true; do
     echo -e "${BLUE}   ${tg_title}   ${NC}"
     echo -e "${BLUE}   ${yt_title}   ${NC}"
     echo ""
+    printf "${GREEN} Beta version ${NC}\n"
     echo -e "\e[93m+-----------------------------------------------+\e[0m" 
     echo ""
     printf "${GREEN} 1) ${NC} Zabbix Dashboard ${NC}\n"
     echo ""
     printf "${GREEN} 2) ${NC} Uninstall Zabbix ${NC}\n"
+    echo ""
+    printf "${GREEN} 3) ${NC} Changing database directory ${NC}\n"
     echo ""
     echo -e "\e[93m+-----------------------------------------------+\e[0m" 
     echo ""
@@ -265,6 +268,10 @@ while true; do
         2)
             clear
 	    uninstall
+            ;;
+        3)
+            clear
+	    bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/data_resync.sh --ipv4)
             ;;
    
         E|e)
