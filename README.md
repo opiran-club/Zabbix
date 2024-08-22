@@ -1,5 +1,7 @@
 ## [Zabbix Dashboard](https://opiran-club.github.io/Zabbix/index.html)
 
+![image](https://github.com/user-attachments/assets/c269bd02-4c82-49a2-a354-1d699be0ed53)
+
 ###  ‼️ INSTRUCTION ‼️
 
 #### 👉 Debian base
