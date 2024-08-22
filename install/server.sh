@@ -122,30 +122,30 @@ zabbix_server() {
     done
 
     echo && echo
-    echo -ne "${YELLOW}Do you have a subdomain/domain pointing to ${GREEN}$public_ip [choose Y] or continue with ${GREEN}$public_ip [choose N]? (y/n): ${NC}" 
+    echo -ne "${YELLOW}Do you have a subdomain/domain pointing to ${GREEN}$public_ip [choose Y] ${NC} ${YELLOW} or continue with ${GREEN}$public_ip [choose N]? (y/n): ${NC}" 
     read -r answer
     if [ "$answer" == "Yy" ]; then
         echo ""
         echo -ne "${YELLOW}Please enter your Domain/subdomain (hostname): ${NC}" 
         read -r hostname
         echo && echo
-        echo -ne "${YELLOW}Do you want to install Zabbix with Nginx instead of Apache? (y/n): ${NC}" 
+        echo -ne "${YELLOW}Do you want to install Zabbix with Nginx [choose Y] instead of Apache [choose N]? (y/n): ${NC}" 
         read -r USE_NGINX
-            if [ "$USE_NGINX" == "Yy" ]; then
-                apt purge apache2 -y
-                apt install -y python3-certbot-nginx
-                certbot --nginx -d $hostname
-                apt-get install -y zabbix-nginx-conf
-                apt remove -y zabbix-apache-conf
-                sed -i "s/#        server_name/server_name $hostname;/g" /etc/zabbix/nginx.conf
-                systemctl restart nginx php-fpm zabbix-server zabbix-agent
-                systemctl enable nginx php-fpm zabbix-server zabbix-agent
+        if [[ "$USE_NGINX" == "y" || "$USE_NGINX" == "Y" ]]; then
+            apt purge apache2 -y
+            apt install -y python3-certbot-nginx
+            certbot --nginx -d "$hostname"
+            apt-get install -y zabbix-nginx-conf
+            apt remove -y zabbix-apache-conf
+            sed -i "s/#        server_name/server_name $hostname;/g" /etc/zabbix/nginx.conf
+            systemctl restart nginx php-fpm zabbix-server zabbix-agent
+            systemctl enable nginx php-fpm zabbix-server zabbix-agent
             else
-                apt purge nginx -y
-                apt install -y python3-certbot-apache
-                certbot --apache -d $hostname
-                systemctl restart apache2 zabbix-server zabbix-agent
-                systemctl enable apache2 zabbix-server zabbix-agent
+            apt purge nginx -y
+            apt install -y python3-certbot-apache
+            certbot --apache -d "$hostname"
+            systemctl restart apache2 zabbix-server zabbix-agent
+            systemctl enable apache2 zabbix-server zabbix-agent
             fi
     else
         apt purge nginx -y
@@ -170,17 +170,20 @@ EXIT
 EOF
 
     log_colored $YELLOW "Importing initial schema and data..."
+    echo ""
     zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
-
+    echo ""
     mysql -uroot -p << EOF
 SET GLOBAL log_bin_trust_function_creators = 0;
 EXIT
 EOF
 
     log_colored $YELLOW "Configuring Zabbix server"
+    echo ""
     sed -i "s/# DBPassword=/DBPassword=$dbroot/" /etc/zabbix/zabbix_server.conf
 
     log_colored $YELLOW "Restarting Zabbix server and agent"
+    echo ""
     systemctl restart zabbix-server zabbix-agent
 
     clear
@@ -199,37 +202,34 @@ EOF
 
 uninstall() {
     log_colored $YELLOW "Starting uninstallation process..."
-    log_colored $YELLOW "Removing Zabbix..."
-    systemctl stop zabbix-server >> "$logfile" 2>&1
-    systemctl stop zabbix-agent >> "$logfile" 2>&1
-    systemctl disable zabbix-server >> "$logfile" 2>&1
-    systemctl disable zabbix-agent >> "$logfile" 2>&1
+
+    log_colored $YELLOW "Stopping and disabling Zabbix services..."
+    systemctl stop zabbix-server zabbix-agent >> "$logfile" 2>&1
+    systemctl disable zabbix-server zabbix-agent >> "$logfile" 2>&1
+
+    log_colored $YELLOW "Removing Zabbix configuration and binaries..."
     rm -f /etc/systemd/system/zabbix-server.service >> "$logfile" 2>&1
     rm -f /etc/systemd/system/zabbix-agent.service >> "$logfile" 2>&1
-    rm -rf /usr/local/sbin/zabbix_server >> "$logfile" 2>&1
-    rm -rf /usr/local/sbin/zabbix_agent >> "$logfile" 2>&1
-    rm -rf /usr/local/etc/zabbix_server.conf >> "$logfile" 2>&1
-    rm -rf /usr/local/src/zabbix* >> "$logfile" 2>&1
-    rm -rf /usr/local/bin/zabbix* >> "$logfile" 2>&1
+    rm -rf /etc/zabbix /usr/share/zabbix /usr/local/sbin/zabbix_* >> "$logfile" 2>&1
+
     log_colored $YELLOW "Removing MySQL..."
     systemctl stop mysql >> "$logfile" 2>&1
     systemctl disable mysql >> "$logfile" 2>&1
     apt-get remove --purge -y mysql-server mysql-client mysql-common >> "$logfile" 2>&1
     apt-get autoremove -y >> "$logfile" 2>&1
     apt-get autoclean >> "$logfile" 2>&1
-    rm -rf /etc/mysql >> "$logfile" 2>&1
-    rm -rf /var/lib/mysql >> "$logfile" 2>&1
-    rm -rf /var/log/mysql >> "$logfile" 2>&1
-    rm -rf /var/log/mysql* >> "$logfile" 2>&1
-    rm -rf /var/lib/mysql* >> "$logfile" 2>&1
-    log_colored $YELLOW "Removing Java..."
-    update-alternatives --remove java /usr/lib/jvm/zulu*/bin/java >> "$logfile" 2>&1
-    update-alternatives --remove javac /usr/lib/jvm/zulu*/bin/javac >> "$logfile" 2>&1
+    rm -rf /etc/mysql /var/lib/mysql /var/log/mysql* >> "$logfile" 2>&1
+
+    log_colored $YELLOW "Removing unnecessary Java configuration..."
+    update-alternatives --remove-all java >> "$logfile" 2>&1
     rm -rf /usr/lib/jvm/zulu* >> "$logfile" 2>&1
+
     log_colored $YELLOW "Cleaning up temporary files..."
-    rm -rf /tmp/zabbix-*
+    rm -rf /tmp/zabbix-* >> "$logfile" 2>&1
+
     log_colored $YELLOW "Uninstallation completed."
 }
+
 
 while true; do
     clear
