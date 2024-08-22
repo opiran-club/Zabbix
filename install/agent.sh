@@ -27,11 +27,13 @@ log_colored(){
     log "${color}${msg}${NC}"
 }
 
+# Prompt for Zabbix Server IP/hostname
 echo -e "${RED}TIP!!${NC}"
 echo -e "${YELLOW}If the server and agent are on the same machine, you can use ${GREEN}127.0.0.1${NC}"
 echo && echo
 read -p "Enter the IP address or hostname of the Zabbix Server: " zabbixhost
 
+# Validate the input for Zabbix Server IP/hostname
 if [ -z "$zabbixhost" ]; then
     log_colored "$RED" "Zabbix Server IP/hostname cannot be empty. Exiting."
     exit 1
@@ -39,10 +41,12 @@ fi
 
 log_colored "$YELLOW" "Zabbix Server set to: $zabbixhost"
 
+# Prepare the temporary directory
 log_colored "$YELLOW" "Removing temp dir $tmpdir"
 rm -rf "$tmpdir" >> "$logfile" 2>&1
 mkdir -p "$tmpdir" >> "$logfile" 2>&1
 
+# Download and extract Zabbix Agent source
 log_colored "$YELLOW" "Downloading $zabbixarchive to $tmpdir"
 if ! wget -q --directory-prefix="$tmpdir" "$zabbixurl" >> "$logfile" 2>&1; then
     log_colored "$RED" "Download failed. Exiting."
@@ -55,10 +59,12 @@ if ! tar -xf "$tmpdir/$zabbixarchive" -C "$tmpdir" >> "$logfile" 2>&1; then
     exit 1
 fi
 
+# Move extracted files to source directory
 filename="${zabbixarchive%.*}"
 filename="${filename%.*}"
 mv "$tmpdir/$filename" "$srcdir" >> "$logfile" 2>&1
 
+# Patch and compile the Zabbix Agent
 cd "${srcdir}/${filename}" >> "$logfile" 2>&1
 log_colored "$YELLOW" "Patching source for 32-bit compatibility..."
 sed -i 's/strconv.Atoi(strings.TrimSpace(line\[:len(line)-2\]))/strconv.ParseInt(strings.TrimSpace(line[:len(line)-2]),10,64)/' src/go/plugins/proc/procfs_linux.go >> "$logfile" 2>&1
@@ -70,14 +76,16 @@ if ! make install >> "$logfile" 2>&1; then
     exit 1
 fi
 
+# Configure the Zabbix Agent with server IP/hostname
 log_colored "$YELLOW" "Configuring Zabbix Agent with server IP/hostname..."
 sed -i "s|Server=127.0.0.1|Server=$zabbixhost|g" "$zabbixconf" >> "$logfile" 2>&1
 sed -i "s|ServerActive=127.0.0.1|ServerActive=$zabbixhost|g" "$zabbixconf" >> "$logfile" 2>&1
 sed -i "s|Hostname=|#Hostname=|g" "$zabbixconf" >> "$logfile" 2>&1
 
+# Set up the systemd service for Zabbix Agent
 if [ ! -f /etc/systemd/system/zabbix-agent.service ]; then
     log_colored "$YELLOW" "Installing Zabbix Agent Service..."
-    sudo tee -a /etc/systemd/system/zabbix-agent.service > /dev/null <<EOT
+    sudo tee /etc/systemd/system/zabbix-agent.service > /dev/null <<EOT
 [Unit]
 Description=Zabbix Agent
 After=syslog.target network.target
@@ -95,8 +103,11 @@ EOT
     systemctl enable zabbix-agent >> "$logfile" 2>&1
 fi
 
+# Start the Zabbix Agent
 log_colored "$GREEN" "Starting Zabbix Agent..."
 systemctl start zabbix-agent >> "$logfile" 2>&1
+
+# Cleanup
 log_colored "$YELLOW" "Removing temp dir $tmpdir"
 rm -rf "$tmpdir" >> "$logfile" 2>&1
 log_colored "$GREEN" "Zabbix Agent installation complete."
