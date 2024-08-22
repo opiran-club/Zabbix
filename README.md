@@ -2,7 +2,7 @@
 
 ###  ‼️ INSTRUCTION ‼️
 
-#### 👉 With root user
+#### 👉 Debian base
 
 ```
 bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install/server.sh --ipv4)
@@ -12,7 +12,8 @@ bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install
 
 ### Next update :
  - Zabbix agent (to connect other vm to zabbix server)
- - change database directory
+ - support for centos / almalinux
+
 #
 #
 #### After finnish up installer Navigate to 
