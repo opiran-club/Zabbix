@@ -20,10 +20,13 @@ bash <(curl -s https://raw.githubusercontent.com/opiran-club/Zabbix/main/install
 #
 #### After finnish up installer Navigate to 
 ```
-http(S)://IP-ADDRESS/zabbix
+http://IP-ADDRESS/zabbix
 ```
-#
-#
+or
+
+```
+https://DOMAIN/zabbix
+```
 #
 
 ### 1) click Next
