@@ -201,17 +201,18 @@ EOF
 }
 
 uninstall() {
+    echo && echo
     log_colored $YELLOW "Starting uninstallation process..."
-
+    echo && echo
     log_colored $YELLOW "Stopping and disabling Zabbix services..."
     systemctl stop zabbix-server zabbix-agent >> "$logfile" 2>&1
     systemctl disable zabbix-server zabbix-agent >> "$logfile" 2>&1
-
+    echo && echo
     log_colored $YELLOW "Removing Zabbix configuration and binaries..."
     rm -f /etc/systemd/system/zabbix-server.service >> "$logfile" 2>&1
     rm -f /etc/systemd/system/zabbix-agent.service >> "$logfile" 2>&1
     rm -rf /etc/zabbix /usr/share/zabbix /usr/local/sbin/zabbix_* >> "$logfile" 2>&1
-
+    echo && echo
     log_colored $YELLOW "Removing MySQL..."
     systemctl stop mysql >> "$logfile" 2>&1
     systemctl disable mysql >> "$logfile" 2>&1
@@ -219,15 +220,14 @@ uninstall() {
     apt-get autoremove -y >> "$logfile" 2>&1
     apt-get autoclean >> "$logfile" 2>&1
     rm -rf /etc/mysql /var/lib/mysql /var/log/mysql* >> "$logfile" 2>&1
-
-    log_colored $YELLOW "Removing unnecessary Java configuration..."
-    update-alternatives --remove-all java >> "$logfile" 2>&1
-    rm -rf /usr/lib/jvm/zulu* >> "$logfile" 2>&1
-
+    echo && echo
     log_colored $YELLOW "Cleaning up temporary files..."
     rm -rf /tmp/zabbix-* >> "$logfile" 2>&1
-
+    echo && echo
+    clear
+    echo && echo
     log_colored $YELLOW "Uninstallation completed."
+    press_enter
 }
 
 
